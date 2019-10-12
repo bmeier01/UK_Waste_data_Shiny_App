@@ -1,7 +1,7 @@
 library(shinydashboard)
 library(googleVis)
 library(leaflet)
-library(ggplot2)
+library(tidyverse)
 library(data.table)
 library(readxl)
 library(DT)
@@ -23,3 +23,8 @@ WD_UK_2018$ewc_chapter[8] <-"shaping and physical treatment of metals"
 WD_UK_2018$ewc_chapter[9] <- "packaging, absorbents, wiping cloths etc"
 WD_UK_2018$ewc_chapter[15] <- "not otherwise specified"
 
+unique(WD_UK_2018$basic_waste_cat)
+
+WD_UK_2018$basic_waste_cat = gsub(pattern = "Hhold/Ind/Com", replacement = "Household/Industrial/Commercial", x = WD_UK_2018$basic_waste_cat)
+WD_UK_2018$basic_waste_cat = gsub(pattern = "*C+D", replacement = "Construction and Demolition", x = WD_UK_2018$basic_waste_cat)
+unique(WD_UK_2018$basic_waste_cat)
