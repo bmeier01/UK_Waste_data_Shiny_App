@@ -37,9 +37,9 @@ shinyUI(dashboardPage(
             #fluidRow(
               box(selectizeInput(inputId = "waste_category",
                                  label = "Waste Category",
-                                 choices = c("basic_waste_cat", "ewc_chapter"))),
+                                 choices = list("Basic Waste Category" = "basic_waste_cat",
+                                                "Waste Types (European Waste Catalogue)" = "ewc_chapter"))),
               
-            
             # Output: Tabset w/ plot, summary, and table ----
             #tabsetPanel(
             #tabPanel("Plot", htmlOutput("Pie")),
@@ -55,16 +55,32 @@ shinyUI(dashboardPage(
     tabItem(tabName = "data",
             fluidRow(
             box(selectizeInput(inputId = "basic_waste_cat",
-                               label= "Waste Type",
+                               label= "Basic Waste Category",
                                choices = unique(WD_UK_2018$basic_waste_cat)),
 
-                selectizeInput(inputId = "recorded_origin",
-                               label = "origin",
-                               choices = unique(WD_UK_2018$recorded_origin)))),
+                selectizeInput(inputId = "recorded_origin_1",
+                               label = "Origin",
+                               choices = unique(WD_UK_2018$recorded_origin))),
 
 #              box(DT::dataTableOutput("table"),
 #                         width = 12), 
-               box(plotOutput("bargraph"), width=12)
+               column(6, plotOutput("bargraph_1"))),
+            
+            br(),
+
+            fluidRow(
+              box(selectizeInput(inputId = "ewc_chapter",
+                                        label= "Waste Types (European Waste Catalogue)",
+                                        choices = unique(WD_UK_2018$ewc_chapter)),
+                         
+                         selectizeInput(inputId = "recorded_origin_2",
+                                        label = "Origin",
+                                        choices = unique(WD_UK_2018$recorded_origin))),
+                     
+                     column(6, plotOutput("bargraph_2")))
+
+            )
+
             ))
   )
-))
+)

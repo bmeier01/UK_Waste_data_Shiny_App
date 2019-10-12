@@ -31,13 +31,21 @@ shinyServer(function(input, output){
     temporary
  })
   
-  destin_waste_by_origin_type <- reactive({
-    WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin & basic_waste_cat == input$basic_waste_cat) %>% 
+  destin_waste_origin_basic_cat <- reactive({
+    WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin_1 & basic_waste_cat == input$basic_waste_cat) %>% 
       group_by(facility_sub_region) %>% 
       summarize(.,waste_in_tonnes = sum(tonnes_received)) %>% 
       mutate(.,percent_waste = round(waste_in_tonnes*100/sum(waste_in_tonnes),2)) %>% 
       arrange(desc(percent_waste))
   })  
+  
+  destin_waste_origin_ewc_type <- reactive({
+    WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin_2 & ewc_chapter == input$ewc_chapter) %>% 
+      group_by(facility_sub_region) %>% 
+      summarize(.,waste_in_tonnes = sum(tonnes_received)) %>% 
+      mutate(.,percent_waste = round(waste_in_tonnes*100/sum(waste_in_tonnes),2)) %>% 
+      arrange(desc(percent_waste))  
+    })  
       
  #     filter(origin == input$origin & dest == input$dest, month == input$month) %>%
  #     group_by(carrier) %>%
@@ -62,13 +70,6 @@ shinyServer(function(input, output){
     # automatically adjust the map size
 #  })
   
-#  output$proportions <- renderPieChart({
-#    datatable(state_stat, rownames=FALSE) %>%
-#      formatStyle(input$selected,
-#                  background="skyblue", fontWeight='bold')
-  # Highlight selected column using formatStyle
-#})
-    
   output$Pie <- renderGvis({
     waste_in_percent <- columnName()
        #WD_UK_2018 %>%
@@ -80,10 +81,19 @@ shinyServer(function(input, output){
   })
   
   
-  output$bargraph <- renderPlot({
-    destin_waste_by_origin_type() %>% 
+  output$bargraph_1 <- renderPlot({
+    destin_waste_origin_basic_cat() %>% 
     ggplot(aes(x=facility_sub_region, y=waste_in_tonnes)) +
-      geom_bar(stat="identity", fill='blue') +
+      geom_bar(stat="identity", fill='royalblue1') +
+      theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
+      xlab("") +
+      ylab("waste in tonnes")
+  })
+  
+  output$bargraph_2 <- renderPlot({
+    destin_waste_origin_ewc_type() %>% 
+      ggplot(aes(x=facility_sub_region, y=waste_in_tonnes)) +
+      geom_bar(stat="identity", fill='darkolivegreen4') +
       theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
       xlab("") +
       ylab("waste in tonnes")
