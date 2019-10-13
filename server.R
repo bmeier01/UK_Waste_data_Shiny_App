@@ -55,24 +55,14 @@ shinyServer(function(input, output){
       summarise(waste_in_tonnes = sum(tonnes_received)) %>% 
       mutate(.,percent_waste = round(waste_in_tonnes*100/sum(waste_in_tonnes),2)) %>% 
       arrange(desc(percent_waste))
-
   })
   
+  for_map <- reactive({WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin_3) %>% 
+      group_by(facility_sub_region) %>% 
+      select(recorded_origin, origin_lon, origin_lat, facility_sub_region, site_lon, site_lat) %>% 
+      unique()
+  })
   
-  #  output$map1 <- renderGvis({
-  #    gvisGeoChart(state_stat, "state.name", input$selected,
-  #                 options=list(region="US", displayMode="regions",
-  #                              resolution="provinces",
-  #                              width="auto", height="auto"))
-  
-  #  })
-  #  output$map2 <- renderGvis({
-  #    gvisGeoChart(state_stat, "state.name", input$selected,
-  #                 options=list(region="US", displayMode="regions",
-  #                              resolution="provinces",
-  #                              width="auto", height="auto"))
-  
-  #  })
   
   output$Pie <- renderGvis({
     waste_in_percent <- columnName()
@@ -114,6 +104,14 @@ shinyServer(function(input, output){
       theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
       xlab("") +
       ylab("Waste in Tonnes")
+  })
+  
+  output$waste_route_map <- renderLeaflet({
+    leaflet() %>%
+    addTiles() %>%
+    addPolygons(data=map_UK, stroke = FALSE) %>% addProviderTiles("Esri.WorldStreetMap") %>% 
+    addCircles(data=for_map(), lng = for_map()$origin_lon, lat = for_map()$origin_lat,color = "green") %>% 
+      addCircles(data=for_map(), lng = for_map()$site_lon, lat= for_map()$site_lat,color = "red") 
   })
 
  

@@ -12,7 +12,8 @@ shinyUI(dashboardPage(skin = "black",
       menuItem("Topic Background", tabName = "intro", icon = icon("info-circle")),
       menuItem("Waste Data Overview", tabName = "proportions", icon = icon("chart-pie")),
       menuItem("Waste Diposal", tabName = "fate", icon = icon("recycle")),
-      menuItem("Waste Routes - Details", tabName = "data", icon = icon("truck"))
+      menuItem("Waste Routes - Details", tabName = "data", icon = icon("truck")),
+      menuItem("Waste Routes - Map", tabName = "map", icon = icon("map"))
       )
   ),
   
@@ -20,14 +21,16 @@ shinyUI(dashboardPage(skin = "black",
     tabItems(
       tabItem(tabName = "intro",
               h4("Where does our waste go?")
-              #fluidRow(box(htmlOutput("map1")),  # gvisGeochart origin
-              #         box(htmlOutput("map2")))), # gvisGeochart dest
+              #needs intro
       ),
-#    tabItem(tabName = "map",
-#            "to be replaced with origin and dest map"
-            #fluidRow(box(htmlOutput("map1")),  # gvisGeochart origin
-            #         box(htmlOutput("map2")))), # gvisGeochart dest
-#            ),
+    tabItem(tabName = "map",
+            fluidPage(box(selectizeInput(inputId = "recorded_origin_3",
+                                         label = "Origin",
+                                         choices = sort(unique(WD_UK_2018$recorded_origin))), width=12)
+                      ),
+                      column(12, leafletOutput("waste_route_map"))#,  # leaflet map
+            #         box(DT::dataTableOutput("longest_distance"), width = 12))) # gvisGeochart dest
+            ),
     tabItem(tabName = "proportions",
             fluidPage(
               box(selectizeInput(inputId = "waste_category",
@@ -48,9 +51,6 @@ shinyUI(dashboardPage(skin = "black",
               br(),
               box(htmlOutput("pie_1_disposal"), width = 12) 
 # 
-
-             
-
 #              box(htmlOutput("Pie_2"), width = 12), 
 #              br(),
 #              box(DT::dataTableOutput("table_2"), width = 12)
