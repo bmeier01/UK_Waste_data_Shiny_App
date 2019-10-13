@@ -1,10 +1,3 @@
-library(shinydashboard)
-library(googleVis)
-library(leaflet)
-library(data.table)
-library(readxl)
-library(DT)
-library(tidyverse)
 
 ## ui.R ##
 shinyUI(dashboardPage(skin = "black",
@@ -17,7 +10,6 @@ shinyUI(dashboardPage(skin = "black",
     sidebarUserPanel("Bettina Meier"), #, image = <link to Your Photo>),
     sidebarMenu(
       menuItem("Topic Background", tabName = "intro", icon = icon("info-circle")),
-      menuItem("Map", tabName = "map", icon = icon("map")), 
       menuItem("Waste Data Overview", tabName = "proportions", icon = icon("chart-pie")),
       menuItem("Waste Diposal", tabName = "fate", icon = icon("recycle")),
       menuItem("Waste Routes - Details", tabName = "data", icon = icon("truck"))
@@ -31,11 +23,11 @@ shinyUI(dashboardPage(skin = "black",
               #fluidRow(box(htmlOutput("map1")),  # gvisGeochart origin
               #         box(htmlOutput("map2")))), # gvisGeochart dest
       ),
-    tabItem(tabName = "map",
-            "to be replaced with origin and dest map"
+#    tabItem(tabName = "map",
+#            "to be replaced with origin and dest map"
             #fluidRow(box(htmlOutput("map1")),  # gvisGeochart origin
             #         box(htmlOutput("map2")))), # gvisGeochart dest
-            ),
+#            ),
     tabItem(tabName = "proportions",
             fluidPage(
               box(selectizeInput(inputId = "waste_category",

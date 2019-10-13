@@ -1,10 +1,4 @@
-library(shinydashboard)
-library(googleVis)
-library(leaflet)
-library(ggplot2)
-library(data.table)
-library(readxl)
-library(DT)
+## server.R ##
 
 shinyServer(function(input, output){
 #  # session
@@ -99,7 +93,7 @@ shinyServer(function(input, output){
   })
   
   output$pie_1_disposal <- renderGvis({
-    gvisPieChart(data = basic_waste_cat_fate(), labelvar = colnames(waste_in_percent[1]), numvar = "percent_waste", options = list(width=600, height=300))
+    gvisPieChart(data = basic_waste_cat_fate(), labelvar = colnames(basic_waste_cat_fate()[1]), numvar = "percent_waste", options = list(width=600, height=300))
   })
   
   output$bargraph_1 <- renderPlot({
