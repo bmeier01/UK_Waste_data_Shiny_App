@@ -78,7 +78,7 @@ shinyServer(function(input, output, session){
       geom_bar(stat="identity", fill='slateblue1') + 
       theme_light() +
       theme(axis.text.x = element_text(angle = 90, hjust=0, size=11), plot.title = element_text(hjust = 0.5)) +
-      labs(title="Waste Disposal Sites (Selected Waste Category)", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Sites/Regions (Selected Waste Category)", x ="", y = "Waste in Tonnes")
   })
   
   output$bargraph_disposaltype <- renderPlot({
@@ -100,7 +100,7 @@ shinyServer(function(input, output, session){
       geom_bar(stat="identity", fill='royalblue1') +
       theme_light() +
       theme(axis.text.x = element_text(size= 11, angle = 90, hjust=0)) +
-      labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Sites/Regions", x ="", y = "Waste in Tonnes")
   })
   
   output$bargraph_2 <- renderPlot({
@@ -109,7 +109,7 @@ shinyServer(function(input, output, session){
       geom_bar(stat="identity", fill='darkolivegreen4') +
       theme_light() +
       theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
-      labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Sites/Regions", x ="", y = "Waste in Tonnes")
   })
   
   output$waste_route_map <- renderLeaflet({
