@@ -110,8 +110,8 @@ shinyServer(function(input, output){
     leaflet() %>%
     addTiles() %>%
     addPolygons(data=map_UK, stroke = FALSE) %>% addProviderTiles("Esri.WorldStreetMap") %>% 
-    addCircles(data=for_map(), lng = for_map()$origin_lon, lat = for_map()$origin_lat,color = "green") %>% 
-      addCircles(data=for_map(), lng = for_map()$site_lon, lat= for_map()$site_lat,color = "red") 
+      addCircles(data=for_map(), lng = for_map()$site_lon, lat= for_map()$site_lat,color = "red")  %>%
+    addCircles(data=for_map(), lng = for_map()$origin_lon, lat = for_map()$origin_lat, color = "green") 
   })
 
  

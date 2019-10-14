@@ -1,6 +1,6 @@
 
 ## ui.R ##
-shinyUI(dashboardPage(skin = "black",
+shinyUI(dashboardPage(skin = "blue",
                       
   dashboardHeader(
     title = "UK Waste Statistics 2018"
@@ -26,11 +26,11 @@ shinyUI(dashboardPage(skin = "black",
     tabItem(tabName = "map",
             fluidPage(box(selectizeInput(inputId = "recorded_origin_3",
                                          label = "Origin",
-                                         choices = sort(unique(WD_UK_2018$recorded_origin))), width=12)
-                      ),
+                                         choices = sort(unique(WD_UK_2018$recorded_origin))), width=12),
+    
                       column(12, leafletOutput("waste_route_map"))#,  # leaflet map
             #         box(DT::dataTableOutput("longest_distance"), width = 12))) # gvisGeochart dest
-            ),
+            )),
     tabItem(tabName = "proportions",
             fluidPage(
               box(selectizeInput(inputId = "waste_category",
@@ -50,11 +50,6 @@ shinyUI(dashboardPage(skin = "black",
               ),
               br(),
               box(htmlOutput("pie_1_disposal"), width = 12) 
-# 
-#              box(htmlOutput("Pie_2"), width = 12), 
-#              br(),
-#              box(DT::dataTableOutput("table_2"), width = 12)
-              
             )),
     tabItem(tabName = "data",
             fluidRow(
@@ -65,9 +60,10 @@ shinyUI(dashboardPage(skin = "black",
               selectizeInput(inputId = "basic_waste_cat",
                                label= "Basic Waste Category",
                                choices = sort(unique(WD_UK_2018$basic_waste_cat))), width = 5),
-
                column(7, plotOutput("bargraph_1"))),
+            
             br(),
+            
             fluidRow(
               box(
                 selectizeInput(inputId = "recorded_origin_2",
@@ -76,11 +72,8 @@ shinyUI(dashboardPage(skin = "black",
                 selectizeInput(inputId = "ewc_chapter",
                                         label= "Waste Types (European Waste Catalogue)",
                                         choices = sort(unique(WD_UK_2018$ewc_chapter))), width = 5),
-                     
-                     column(7, plotOutput("bargraph_2")))
-
+              column(7, plotOutput("bargraph_2")))
             )
-
             ))
   )
 )

@@ -40,7 +40,6 @@ WD_UK_2018$fate = gsub(pattern = "\\(D\\)", replacement = "\\(Disposal\\)", x = 
 
 WD_UK_2018$facility_sub_region = gsub(pattern = "Bath, Bristol and S Glo", replacement = "Bath, Bristol, S Glouchester", x = WD_UK_2018$facility_sub_region)
 
-
 write.csv(WD_UK_2018, file = "WD_UK_2018_step1.csv")
 
 
@@ -57,13 +56,49 @@ sources_recorded_origin$recorded_origin = paste0(sources_recorded_origin$recorde
 sources_df <- mutate_geocode(sources_recorded_origin, recorded_origin)
 head(sources_df)
 colnames(sources_df) <- c("recorded_origin", "origin_lon", "origin_lat")
-str(sources_df)
 sources_df$recorded_origin = gsub(pattern = ", UK", replacement = "", x = sources_df$recorded_origin) # remove to match with original DF
+View(sources_df)
+nrow(sources_df)
 
-# Newark & Sherwood have not been geocoded correctly, currently US
-# correct is 53.0851° N, 0.9522° W
-#sources_df$origin_lon[which(sources_df$recorded_origin == "Newark & Sherwood")] <- as.numeric("0.9522")
-#sources_df$origin_lat[which(sources_df$recorded_origin == "Newark & Sherwood")] <- as.numeric("53.0851")
+# Hinckley & Bosworth has been geocoded incorrectly, currently US, correct is 52.6303° N, 1.4115° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Hinckley & Bosworth")] <- as.numeric("-1.4115")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Hinckley & Bosworth")] <- as.numeric("52.6303")
+
+# East Midlands have not been geocoded as usually Midlands East, correct is 52.8700° N, 0.9950° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "East Midlands")] <- as.numeric("-0.9950")
+sources_df$origin_lat[which(sources_df$recorded_origin == "East Midlands")] <- as.numeric("52.8700")
+
+# Southampton UA has been geocoded incorrectly, currently US, correct is 52.6303° N, 1.4115° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Southampton UA")] <- as.numeric("-1.4115")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Southampton UA")] <- as.numeric("52.6303")
+
+#Newark & Sherwood has been geocoded incorrectly, currently US, correct is 53.0851° N, 0.9522° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Newark & Sherwood")] <- as.numeric("-0.9522")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Newark & Sherwood")] <- as.numeric("53.0851")
+
+# Kensington & Chelsea has been geocoded incorrectly, currently US, correct is 51.4991° N, 0.1938° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Kensington & Chelsea")] <- as.numeric("-0.1938")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Kensington & Chelsea")] <- as.numeric("51.4991")
+
+# Shrewsbury & Atcham has been geocoded incorrectly, currently US, correct is 52.6650° N, 2.7690° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Shrewsbury & Atcham")] <- as.numeric("-2.7690")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Shrewsbury & Atcham")] <- as.numeric("52.6650")
+
+# Weymouth & Portland has been geocoded incorrectly, currently US, correct is 50.6067° N, 2.4645° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Weymouth & Portland")] <- as.numeric("-2.4645")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Weymouth & Portland")] <- as.numeric("50.6067")
+
+# Perth & Kinross has been geocoded incorrectly, currently US, correct is 56.3954° N, 3.4284° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Perth & Kinross")] <- as.numeric("-3.4284")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Perth & Kinross")] <- as.numeric("56.3954")
+
+# Neath Port Talbot UA has not been geocoded, 51.6917° N, 3.7347° W
+sources_df$origin_lon[which(sources_df$recorded_origin == "Neath Port Talbot UA")] <- as.numeric("-3.7347")
+sources_df$origin_lat[which(sources_df$recorded_origin == "Neath Port Talbot UA")] <- as.numeric("51.6917")
+
+# Outside UK has been geocoded, remove
+sources_df$origin_lat[which(sources_df$recorded_origin == "Outside UK")] <- NA
+sources_df$origin_lon[which(sources_df$recorded_origin == "Outside UK")] <- NA
 
 write.csv(sources_df, file = "recorded_origin_lon_lat.csv")
 
@@ -89,10 +124,10 @@ WD_UK_2018_ori_ll_dest_ll <- dplyr::left_join(WD_UK_2018_ori_ll, waste_facility_
 
 
 ## GET DISTANCE ####
-WD_UK_2018_dest_ll_origin_ll$ori_dest_distance <- distGeo(WD_UK_2018_dest_ll_origin_ll[26:27], WD_UK_2018_dest_ll_origin_ll[28:29])
+WD_UK_2018_ori_ll_dest_ll$ori_dest_distance <- distGeo(WD_UK_2018_ori_ll_dest_ll[26:27], WD_UK_2018_ori_ll_dest_ll[28:29])
 
 # create new columns to calculate in km and convert to miles
-WD_UK_2018_ll_dist <- WD_UK_2018_dest_ll_origin_ll %>%
+WD_UK_2018_ll_dist <- WD_UK_2018_ori_ll_dest_ll %>%
   dplyr::mutate(Dist_in_Kilometres = round(ori_dest_distance/1000, 1),  # calculate km from m
     Dist_in_Miles = round(Dist_in_Kilometres * 0.621371, 1)  # convert to miles
   )
