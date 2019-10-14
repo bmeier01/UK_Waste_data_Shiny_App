@@ -78,7 +78,7 @@ shinyServer(function(input, output, session){
       geom_bar(stat="identity", fill='slateblue1') + 
       theme_light() +
       theme(axis.text.x = element_text(angle = 90, hjust=0, size=11), plot.title = element_text(hjust = 0.5)) +
-      labs(title="Waste Disposal Sites for Selected Waste Category", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Sites (Selected Waste Category)", x ="", y = "Waste in Tonnes")
   })
   
   output$bargraph_disposaltype <- renderPlot({
@@ -87,7 +87,7 @@ shinyServer(function(input, output, session){
       geom_bar(stat="identity", fill='goldenrod1') + 
       theme_light() +
       theme(axis.text.x = element_text(angle = 90, hjust=0, size = 12), plot.title = element_text(hjust = 0.5)) +
-      labs(title="Waste Disposal Routes for Selected Waste Category", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Treatment (Selected Waste Category)", x ="", y = "Waste in Tonnes")
   })
   
   output$pie_1_disposal <- renderGvis({
