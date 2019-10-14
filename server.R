@@ -1,16 +1,15 @@
 ## server.R ##
 
-shinyServer(function(input, output){
-#  # session
-#  #updateSelectizeInput(session, 'foo', choices = data, server = TRUE)
-#  # Return the selected dataset column ----
-  columnName <- reactive({
-#    # switch(input$waste_category,
-#    #        "total" = tonnes_received,
-#    #        "population_adjusted" = pressure,
-#    #        "basic_waste_cat" = basic_waste_cat,
-#    #        "ewc_chapter" = ewc_chapter)
-#    # 
+shinyServer(function(input, output, session){
+  
+  observe ({
+  updateSelectizeInput( session =
+    session, inputId = "ewc_chapter",
+    choices = unique(WD_UK_2018[recorded_origin == input$recorded_origin_2, ewc_chapter])
+    )
+  })
+  
+    columnName <- reactive({
     if (input$waste_category == "basic_waste_cat"){
       WD_UK_2018 %>% group_by(basic_waste_cat) %>% 
       summarize(.,waste_in_tonnes = sum(tonnes_received)) %>% 
@@ -79,7 +78,7 @@ shinyServer(function(input, output){
       geom_bar(stat="identity", fill='slateblue1') + 
       theme_light() +
       theme(axis.text.x = element_text(angle = 90, hjust=0, size=11), plot.title = element_text(hjust = 0.5)) +
-      labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Sites for Selected Waste Category", x ="", y = "Waste in Tonnes")
   })
   
   output$bargraph_disposaltype <- renderPlot({
@@ -88,7 +87,7 @@ shinyServer(function(input, output){
       geom_bar(stat="identity", fill='goldenrod1') + 
       theme_light() +
       theme(axis.text.x = element_text(angle = 90, hjust=0, size = 12), plot.title = element_text(hjust = 0.5)) +
-      labs(title="Routes of Waste Disposal", x ="", y = "Waste in Tonnes")
+      labs(title="Waste Disposal Routes for Selected Waste Category", x ="", y = "Waste in Tonnes")
   })
   
   output$pie_1_disposal <- renderGvis({
@@ -101,8 +100,7 @@ shinyServer(function(input, output){
       geom_bar(stat="identity", fill='royalblue1') +
       theme_light() +
       theme(axis.text.x = element_text(size= 11, angle = 90, hjust=0)) +
-      xlab("") +
-      ylab("Waste in Tonnes")
+      labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
   })
   
   output$bargraph_2 <- renderPlot({
@@ -111,8 +109,7 @@ shinyServer(function(input, output){
       geom_bar(stat="identity", fill='darkolivegreen4') +
       theme_light() +
       theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
-      xlab("") +
-      ylab("Waste in Tonnes")
+      labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
   })
   
   output$waste_route_map <- renderLeaflet({
