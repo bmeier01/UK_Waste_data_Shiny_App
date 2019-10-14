@@ -54,6 +54,9 @@ sources_recorded_origin <- as.data.frame(sources_1)
 sources_recorded_origin$recorded_origin = paste0(sources_recorded_origin$recorded_origin, ", UK") # add UK to origin
 
 sources_df <- mutate_geocode(sources_recorded_origin, recorded_origin)
+# requires sign up to Google Cloud Platform and an API key 
+# register_google(key = "key code")
+
 head(sources_df)
 colnames(sources_df) <- c("recorded_origin", "origin_lon", "origin_lat")
 sources_df$recorded_origin = gsub(pattern = ", UK", replacement = "", x = sources_df$recorded_origin) # remove to match with original DF
@@ -100,6 +103,9 @@ sources_df$origin_lat[which(sources_df$recorded_origin == "Neath Port Talbot UA"
 sources_df$origin_lat[which(sources_df$recorded_origin == "Outside UK")] <- NA
 sources_df$origin_lon[which(sources_df$recorded_origin == "Outside UK")] <- NA
 
+sources_df$origin_lat[which(sources_df$recorded_origin == "South West")] <- NA
+sources_df$origin_lon[which(sources_df$recorded_origin == "South West")] <- NA
+
 write.csv(sources_df, file = "recorded_origin_lon_lat.csv")
 
 # 2. USE GIVEN POSTCODES FOR WASTE FACILITY GEOCODING RATHER THAN EASTING AND NORTHING INFO
@@ -111,9 +117,49 @@ wf_df_1 <- na.omit(wf_df)
 str(wf_df_1)
 head(wf_df_1)
 
+
 waste_facility_lon_lat <- mutate_geocode(wf_df_1, sitepc)
 colnames(waste_facility_lon_lat) <- c("sitepc", "site_lon", "site_lat")
 head(waste_facility_lon_lat)
+
+# NN17 3JG has been geocoded incorrectly, 52.4888° N 0.6434° W
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "NN17 3JG")] <- as.numeric("-0.6434")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "NN17 3JG")] <- as.numeric("52.4888")
+
+# PE6 7TH has been geocoded incorrectly, 52.5998° N, 0.1848° W
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "PE6 7TH")] <- as.numeric("-0.1848")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "PE6 7TH")] <- as.numeric("52.5998")
+
+# PE8 6NH has been geocoded incorrectly, 52.5858° N, 0.4362° W
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "PE8 6NH")] <- as.numeric("-0.4362")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "PE8 6NH")] <- as.numeric("52.5858")
+
+# SS16 4UH has been geocoded incorrectly, 51.5401° N, 0.5253° E
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "SS16 4UH")] <- as.numeric("0.5253")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "SS16 4UH")] <- as.numeric("51.5401")
+
+# RM13 9DA postcode no longer in use, has been geocoded incorrectly, 51.2917° N 0.1121° E
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "RM13 9DA")] <- as.numeric("0.0922")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "RM13 9DA")] <- as.numeric("51.2917")
+
+# DL5 6NB, 54°35'27.6"N 1°33'38.6"W
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "DL5 6NB")] <- as.numeric("-1.3338")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "DL5 6NB")] <- as.numeric("54.3527")
+
+# TS25 2BS
+
+# TS6 6UG, TS2 1UE, TS23 4HS, NE21 4SX, BL2 4LT, BL9 8QZ, PR4 0XE, WA11 0RN, SL3 0LP, RG30 3XA, RG10 9YB,
+# MK18 2HF, SL2 3SD, HP9 1XD, MK3 5JU, DA2 8EB, OX14 4PW, OX29 5BJ, RH1 4ER, GU10 1PG, RH12 4QD, RH12 3DH,
+# GL52 4DG, GL52 7RT, SN11 8RE, SN4 7SB, CB23 9HH, CB23 9HH, YO41 4DB, DN40 1QR, DN38 6AE, DN15 9AP, DN15 0BD,
+# YO7 3RB, YO17 8JA, DN14 0RL
+
+
+
+# PE18 8EJ postcode no longer in use, 52.1911° N 0.0922° W 
+waste_facility_lon_lat$site_lon[which(waste_facility_lon_lat$sitepc == "PE18 8EJ")] <- as.numeric("-0.0922")
+waste_facility_lon_lat$site_lat[which(waste_facility_lon_lat$sitepc == "PE18 8EJ")] <- as.numeric("52.1911")
+
+
 
 write.csv(waste_facility_lon_lat, file = "waste_facility_lon_lat.csv")
 

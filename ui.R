@@ -46,10 +46,13 @@ shinyUI(dashboardPage(skin = "blue",
               box(selectizeInput(inputId = "basic_waste_cat",
                                  label= "Basic Waste Category",
                                  choices = sort(unique(WD_UK_2018$basic_waste_cat))), width = 12),
-              box(plotOutput("bargraph_disposal"), width = 12
+              box(plotOutput("bargraph_disposalsite"), width = 12
               ),
               br(),
-              box(htmlOutput("pie_1_disposal"), width = 12) 
+              box(plotOutput("bargraph_disposaltype"),
+                  htmlOutput("pie_1_disposal"), width = 12
+              )
+
             )),
     tabItem(tabName = "data",
             fluidRow(
@@ -57,7 +60,7 @@ shinyUI(dashboardPage(skin = "blue",
               selectizeInput(inputId = "recorded_origin_1",
                                label = "Origin",
                                choices = sort(unique(WD_UK_2018$recorded_origin))),
-              selectizeInput(inputId = "basic_waste_cat",
+              selectizeInput(inputId = "basic_waste_cat_2",
                                label= "Basic Waste Category",
                                choices = sort(unique(WD_UK_2018$basic_waste_cat))), width = 5),
                column(7, plotOutput("bargraph_1"))),

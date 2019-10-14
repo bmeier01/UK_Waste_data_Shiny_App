@@ -26,7 +26,7 @@ shinyServer(function(input, output){
  })
   
   destin_waste_origin_basic_cat <- reactive({
-    WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin_1 & basic_waste_cat == input$basic_waste_cat) %>% 
+    WD_UK_2018 %>% filter(., recorded_origin == input$recorded_origin_1 & basic_waste_cat == input$basic_waste_cat_2) %>% 
       group_by(facility_sub_region) %>% 
       summarize(.,waste_in_tonnes = sum(tonnes_received)) %>% 
       mutate(.,percent_waste = round(waste_in_tonnes*100/sum(waste_in_tonnes),2)) %>% 
@@ -73,17 +73,26 @@ shinyServer(function(input, output){
     columnName()
   })
   
-  output$bargraph_disposal <- renderPlot({
+  output$bargraph_disposalsite <- renderPlot({
     basic_waste_cat_site() %>% 
       ggplot(aes(x=facility_sub_region, y=waste_in_tonnes)) +
-      geom_bar(stat="identity", fill='goldenrod1') + 
+      geom_bar(stat="identity", fill='slateblue1') + 
       theme_light() +
-      theme(axis.text.x = element_text(angle = 90, hjust=0), plot.title = element_text(hjust = 0.5)) +
+      theme(axis.text.x = element_text(angle = 90, hjust=0, size=11), plot.title = element_text(hjust = 0.5)) +
       labs(title="Waste Disposal Sites", x ="", y = "Waste in Tonnes")
   })
   
+  output$bargraph_disposaltype <- renderPlot({
+    basic_waste_cat_fate() %>% 
+      ggplot(aes(x=fate, y=waste_in_tonnes)) +
+      geom_bar(stat="identity", fill='goldenrod1') + 
+      theme_light() +
+      theme(axis.text.x = element_text(angle = 90, hjust=0, size = 12), plot.title = element_text(hjust = 0.5)) +
+      labs(title="Routes of Waste Disposal", x ="", y = "Waste in Tonnes")
+  })
+  
   output$pie_1_disposal <- renderGvis({
-    gvisPieChart(data = basic_waste_cat_fate(), labelvar = colnames(basic_waste_cat_fate()[1]), numvar = "percent_waste", options = list(width=600, height=300))
+    gvisPieChart(data = basic_waste_cat_fate(), labelvar = colnames(basic_waste_cat_fate()[1]), numvar = "percent_waste", options = list(width=580, height=300))
   })
   
   output$bargraph_1 <- renderPlot({
@@ -91,7 +100,7 @@ shinyServer(function(input, output){
     ggplot(aes(x=facility_sub_region, y=waste_in_tonnes)) +
       geom_bar(stat="identity", fill='royalblue1') +
       theme_light() +
-      theme(axis.text.x = element_text(size= 12, angle = 90, hjust=0)) +
+      theme(axis.text.x = element_text(size= 11, angle = 90, hjust=0)) +
       xlab("") +
       ylab("Waste in Tonnes")
   })
